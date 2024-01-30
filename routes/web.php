@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GMOController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DFMapController;
+use App\Http\Controllers\DFController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegistrationController;
 /*
@@ -43,4 +44,8 @@ Route::post('logout',[LoginController::class,'logout'])->middleware('auth');
 Route::fallback(function () {
     return view('myCustom404Error');
     });
-    
+
+Route::get('/DF',[DFController::class,'index'])-> middleware('auth');
+
+Route::get('/DF/{slug}',[DFController::class,'DF_slug'])->name('DF')->middleware('auth');
+

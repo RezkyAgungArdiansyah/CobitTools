@@ -4,7 +4,7 @@
 
 @include('Partials.Offcanvas')
 
-<div class="container mt-3">
+<div class="container px-5">
 <h3>Step 1 : Understand the enterprise context and strategy.</h3>
 <ol>
     <li>Understand enterprise strategy</li>
@@ -14,4 +14,6 @@
 </ol>
 </div>
 
+@include('Partials.step2')
+@include('Partials.step3')
 @endsection

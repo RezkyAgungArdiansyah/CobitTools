@@ -15,7 +15,7 @@
         
         table.gmo {
             border-collapse: collapse;
-            width: 90%;
+            width: 100%;
             margin: 20px auto;
         }
         td.gmo {

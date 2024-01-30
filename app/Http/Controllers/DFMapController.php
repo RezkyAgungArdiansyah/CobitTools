@@ -35,7 +35,7 @@ class DFMapController extends Controller
 {
     
     public function DFMap(){
-        return view('Page/DFMap', ["judul"=> "Design Factor","head"=>"DFMap"]);
+        return view('Page/DFMap', ["judul"=> "Design Factor","head"=>"DFMap", "slug"=>'']);
     }
     
     public function DFMap_slug($slug){
@@ -82,7 +82,7 @@ class DFMapController extends Controller
                 break;
         }
             $GMO = GMO::all();
-            return view("DFMap/$slug",["judul"=> "Design Factor","head"=>"DFMap","MST"=>$MST, "DF_Map"=>$DF_Map,"GMO"=>$GMO, "slug"=>$slug]);
+            return view("DFMap/$slug",["judul"=> "Design Factor Informatio","head"=>"DFMap","MST"=>$MST, "DF_Map"=>$DF_Map,"GMO"=>$GMO, "slug"=>$slug]);
         
     }
 

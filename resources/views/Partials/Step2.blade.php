@@ -1,4 +1,4 @@
-<div class="container p-5">
+<div class="container px-5">
 <h3>Step 2 : Determine the initial scope of the governance system</h3>
 <ol>
     @php

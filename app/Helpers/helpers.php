@@ -78,4 +78,28 @@ function showTableMap($DF_Map,$Header_Name,$ID_Name,$i, $Arr){
     echo "</div>";
 }
 
+function showDFtable($MST,$Data,$Headers,$DBColumns,$n){
+$l = count($Headers);
+
+echo "<div class='container mt-4 border'>";
+    echo "<table class='gmo'>";
+        echo "<tr class='gmo'>";
+        foreach($Headers as $Head){
+            echo "<th class='gmo'>$Head</th>";
+        }
+        echo "</tr>";
+        $i = 0;
+        foreach($MST->sortBy('id_df'.$n) as $row){
+            echo "<tr class='gmo'>";
+            echo "<td class='gmo'>".$row->{$DBColumns[0]}."</td>";
+            foreach(array_slice($DBColumns,1) as $column){
+            echo "<td class='gmo'>".$Data->get($i)->$column ."</td>";
+            }
+            echo "</tr>";
+        $i++;
+        }
+    echo "</table>";
+echo "</div>";
+}
+
 ?>
