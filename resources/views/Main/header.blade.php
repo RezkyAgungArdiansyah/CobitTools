@@ -17,6 +17,7 @@
             border-collapse: collapse;
             width: 100%;
             margin: 20px auto;
+            margin-right: 20px;
         }
         td.gmo {
             border: 1px solid #ddd;

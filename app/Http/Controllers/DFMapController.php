@@ -82,7 +82,7 @@ class DFMapController extends Controller
                 break;
         }
             $GMO = GMO::all();
-            return view("DFMap/$slug",["judul"=> "Design Factor Informatio","head"=>"DFMap","MST"=>$MST, "DF_Map"=>$DF_Map,"GMO"=>$GMO, "slug"=>$slug]);
+            return view("DFMap/$slug",["judul"=> "Design Factor Information","head"=>"DFMap","MST"=>$MST, "DF_Map"=>$DF_Map,"GMO"=>$GMO, "slug"=>$slug]);
         
     }
 

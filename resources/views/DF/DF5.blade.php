@@ -7,6 +7,15 @@
     @include('Partials.Offcanvas2')
     
     @php
-    showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],5);
+    showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],1);
+    $relative_imp = calculate_relative_importance($Data,$DFMap,$MST,$GMO);
+    // print_r($relative_imp);
     @endphp
+    <div class="container-fluid border bg-secondary text-center mt-5">
+        <h3>Design Factor 5 {{$DFName}} Resulting Governance/Management Objetives Importance</h3>
+    </div>
+    @php
+    show_relative_imp_table($GMO,$relative_imp)
+    @endphp
+
 @endsection
