@@ -6,7 +6,7 @@
 @include('Partials.Step3')
 <h1 class="gmo">Design Factor 6 Explanation</h1>
 @php
-    showTable($MST,['dimension','explanation']);
+    showTable($MST,['Regulatory Environment','Explanation'],['dimension','explanation']);
 @endphp
 
 <h1 class="gmo">Design Factor 6 Map Tables</h1>

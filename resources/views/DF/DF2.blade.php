@@ -14,6 +14,7 @@
     <div class="container-fluid border bg-secondary text-center mt-5">
         <h3>Design Factor 2 {{$DFName}} Resulting Governance/Management Objetives Importance</h3>
     </div>
+    
     @php
     show_relative_imp_table($GMO,$relative_imp)
     @endphp

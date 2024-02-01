@@ -6,7 +6,7 @@
 @include('Partials.Step3')
 <h1 class="gmo">Design Factor 5 Explanation</h1>
 @php
-    showTable($MST,['dimension','explanation']);
+    showTable($MST,['Threat Lancscape','Explanation'],['dimension','explanation']);
 @endphp
 
 <h1 class="gmo">Design Factor 5 Map Tables</h1>

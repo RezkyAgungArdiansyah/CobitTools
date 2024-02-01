@@ -1,5 +1,7 @@
-<?php 
+<?php
 function chart($percents){    
+    //this function need input a number i.e $percents then it will return a horizontal bar
+    //this function is needs as sub function for show_relative_imp_table
     if ($percents < 0) {
         echo "<div style='width:34px;' class='col-sm-1 text-end border me-1'>$percents</div>";
         for($i=1;$i<=20-abs($percents/5);$i++){
@@ -8,7 +10,8 @@ function chart($percents){
             echo "<div class='col bg-danger'></div>";
         }
         for($i=21;$i<=40;$i++){
-            echo "<div class='col'></div>";}
+            echo "<div class='col'></div>";
+            }
         }
     elseif ($percents > 0) {
         
@@ -26,14 +29,18 @@ function chart($percents){
     }
 }
 
-function showTable($table, $columns) {
-    // @dd($table);
+function showTable($table,$shown_columns ,$columns) {
+    // this function is used to show first table on "Design Factor Map X" menu
+    //this function only show table on Database on the chosen column
+    
+    // it require input $table from database, $columns on the chosen columns what we want to show
+    // on the other hand it's same as we query SELECT on database but only can choose the column
     echo "<div class='container'>";
     echo "<table class='gmo'>";
     
     echo "<tr class='gmo'>" ;
     echo "<th class='gmo'>NO</th>";
-    foreach($columns as $column){
+    foreach($shown_columns as $column){
         echo "<th class='gmo'>$column</th>";
     }
     echo "</tr>";
@@ -53,11 +60,19 @@ function showTable($table, $columns) {
 }
 
 function showTableMap($DF_Map,$Header_Name,$ID_Name,$i, $Arr){
-    // @dd($DF_Map);
+    // this function is used to show second table on "Design Factor Map X" menu
+    // this function quitely different on the previous one, since the data on data base are only a vector
+    // then it's reshape the input such that it, display same on cobit tools excel
+
+    // it  requires input 
+    // $DF_Map on database
+    // $Header_Name for first headers name on shown table
+    // $ID_Name for the first column i.e DF1
+    // $i what DF ? DF1 -> $i = 1, DF2 -> $i =2
+    // $Arr is column name on database e.g usually use ['dimension','explanation']
     $x = $Arr[0];
     $y = $Arr[1];
-    echo "<div style='overflow:auto;' class='container-mt-6 px-4'>";
-    echo "<table style='overflow:scroll;' class='gmo'>";
+    echo "<table class='gmo'>";
     echo "<tr class='gmo'>";
     echo "<th class='gmo'>DF$i</td>";
     foreach($Header_Name as $column){
@@ -76,13 +91,10 @@ function showTableMap($DF_Map,$Header_Name,$ID_Name,$i, $Arr){
         $i++;
     }
     echo "</table>";
-    echo "</div>";
 }
 
 function showDFtable($MST,$Data,$Headers,$DBColumns,$n){
 $l = count($Headers);
-
-echo "<div style='width:80%' class='container mt-4 border'>";
     echo "<table class='gmo'>";
         echo "<tr class='gmo'>";
         foreach($Headers as $Head){
@@ -92,14 +104,18 @@ echo "<div style='width:80%' class='container mt-4 border'>";
         $i = 0;
         foreach($MST->sortBy('id_df'.$n) as $row){
             echo "<tr class='gmo'>";
-            echo "<td class='gmo'>".$row->{$DBColumns[0]}."</td>";
+            echo "<td style='text-align:left' class='gmo'>".$row->{$DBColumns[0]}."</td>";
+            $j = 0;
             foreach(array_slice($DBColumns,1) as $column){
-            echo "<td class='gmo'>".$Data->get($i)->$column ."</td>";
+                echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='0' max='100'></td>";
+                $j++;
             }
-            echo "</tr>";
+        echo "</tr>";
         $i++;
         }
     echo "</table>";
+    echo "<button type='submit' class='btn btn-secondary'>Submit</button>";
+    echo "</form>";
 echo "</div>";
 }
 
@@ -161,6 +177,8 @@ function multiplyMatrices($matrix1, $matrix2) {
 }
 
 function transposeMatrix($matrix) {
+    // a simple function to transpose matrice
+    // the input is n x m matrices and the output will be m x n matrices
     $transposedMatrix = [];
 
     foreach ($matrix as $rowIndex => $row) {
@@ -173,11 +191,16 @@ function transposeMatrix($matrix) {
 }
 
 function calculate_relative_importance($Data,$DFMap,$MST,$GMO,$use_cor = false, $slug = ''){
+// this function will give output an one dimension with length 40, 
+// this function is neccesary for input on below function i.e show_ relative importance
+// $Data is input as on excel
+// $DFMap 
     if($slug != 'DF2'){
+        //give 2 x 40 outputs matrices
         $Data_ = to_array($Data,['importance','baseline']);
-        // print_r($Data);
+        // reshape database column from 1 x n*40 to n x 40 matrices
         $DFMap_ = to_array_reshape($DFMap,40);
-        // print_r($DFMap);
+        // the outputs is only normal multiply the given matrices then the first column is for importance and the second is for the baseline importance
         $Outputs = multiplyMatrices($DFMap_,$Data_);}
     else{
         $Data_ = to_array($Data,['importance','baseline']); // I = 13 x 2
@@ -208,10 +231,13 @@ function calculate_relative_importance($Data,$DFMap,$MST,$GMO,$use_cor = false, 
 }
 
 function show_relative_imp_table($GMO,$relative_imp){
-    echo "<div style='width:80%' class='container my-5'>";
+// this function will give outputs horizontal bar chart that we can click it for each row, if neccesary more information
+// $GMO base on Database which have column id as primary key,id_gmo, dimension, and explanation
+// $relative_imp is only one dimension array with length 40
+    echo "<div style='width:80%' class='container my-5' id='main_table'>";
     $i = 0;
     foreach($GMO as $gmo){
-        echo "<div type='button' class='d-flex flex-row' data-bs-toggle='collapse' data-bs-target='#demo_$i'>";
+        echo "<div type='button' class='d-flex flex-row my-1' data-bs-toggle='collapse' data-bs-target='#demo_$i'>";
         echo "<div class='col-sm-1 pe-2'>>".$gmo->id_gmo."</div>";
         echo "<div class='col-sm-5'>".$gmo->dimension."</div>";
         chart($relative_imp[$i]);

@@ -10,7 +10,7 @@
 <b> <u> Enterprise strategy </u></b> — Enterprises can have different strategies, which can be expressed as one or more of the
 archetypes shown below table. Organizations typically have a primary strategy and, at most, one secondary strategy.</div>
 @php
-    showTable($MST,['dimension','explanation']);
+    showTable($MST,['Strategy Archtype','Explanation'],['dimension','explanation']);
 @endphp
 
 <h1 class="gmo">Design Factor 1 Map Tables</h1>

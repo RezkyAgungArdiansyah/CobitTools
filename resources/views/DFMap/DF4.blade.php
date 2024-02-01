@@ -8,7 +8,7 @@
 <div class="container p-5"><b><u>I&T Related Issues</u></b> - A related method for an I&T risk assessment for the enterprise is to consider which I&Trelated
     issues it currently faces, or, in other words, what I&T-related risk has materialized. The most common of such issues include on below table</div>
 @php
-    showTable($MST,['dimension']);
+    showTable($MST,['Description'],['dimension']);
 @endphp
 
 <h1 class="gmo">Design Factor 4 Map Tables</h1>

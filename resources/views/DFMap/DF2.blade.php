@@ -6,8 +6,8 @@
 @include('Partials.Step2')
 <h1 class="gmo">Design Factor 2 Explanation</h1>
 @php
-    showTable($MST[0],['id_ag','dimension']);
-    showTable($MST[1],['id_eg','dimension']);
+    showTable($MST[0],['AG ID','Explanation'],['id_ag','dimension']);
+    showTable($MST[1],['EG ID','Explanation'],['id_eg','dimension']);
 @endphp
 
 <h1 class="gmo">Design Factor 2 Map Tables</h1>

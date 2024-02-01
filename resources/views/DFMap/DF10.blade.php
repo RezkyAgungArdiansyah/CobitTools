@@ -8,7 +8,7 @@
 <div class="container p-5"><b><u>Technology adoption strategy</u></b> - The technology adoption strategy can be classified as listed on below table</div>
 
 @php
-    showTable($MST,['dimension','explanation']);
+    showTable($MST,['Technology Adoption Strategy','Explanation'],['dimension','explanation']);
 @endphp
 
 <h1 class="gmo">Design Factor 10 Map Tables</h1>

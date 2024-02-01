@@ -10,7 +10,7 @@
     appetite. The risk categories listed on below table merit consideration.</div>
 
 @php
-    showTable($MST,['dimension']);
+    showTable($MST,['Description'],['dimension']);
 @endphp
 
 <h1 class="gmo">Design Factor 3 Map Tables</h1>
