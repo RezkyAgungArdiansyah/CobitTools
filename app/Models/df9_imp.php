@@ -10,4 +10,6 @@ class df9_imp extends Model
     use HasFactory;
     protected $table = "df9_imp";
     protected $guarded = ["id_df9"];
+    public $timestamps = false;
+
 }

@@ -10,4 +10,5 @@ class df5_imp extends Model
     use HasFactory;
     protected $table = "df5_imp";
     protected $guarded = ["id_df5"];
+    public $timestamps = false;
 }

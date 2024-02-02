@@ -7,7 +7,7 @@
     @include('Partials.Offcanvas2')
     
     @php
-    showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],1);
+    showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],6);
     $relative_imp = calculate_relative_importance($Data,$DFMap,$MST,$GMO);
     // print_r($relative_imp);
     @endphp

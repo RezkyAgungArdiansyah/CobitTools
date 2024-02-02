@@ -79,28 +79,28 @@
         </div>
         {{-- ms-auto margin start jadi geser kekanan --}}
         @auth
-        <div class="navbar-nav ms-auto me-3">
-          <div class="dropdown">
-            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-              Hello {{auth()->user()->name}}
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="/profile">Profile</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <form action="/logout" method="post">
-                  @csrf
-                  <button type="submit" class="dropdown-item">Logout</a>
-                </form>
-              </li>
-            </ul>
-          </div>  
-        </div>
+          <div class="navbar-nav ms-auto me-3">
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Hello {{auth()->user()->name}}
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form action="/logout" method="post">
+                    @csrf
+                    <button type="submit" class="dropdown-item">Logout</a>
+                  </form>
+                </li>
+              </ul>
+            </div>  
+          </div>
         @else
-        <div class="navbar-nav ms-auto me-3">
-          <a href="/login" class="nav-link {{$head != 'login' ? 'active' : 'disabled'}}"><i class="bi bi-arrow-bar-right"></i>Login</a>
-        </div>
-          @endauth
+          <div class="navbar-nav ms-auto me-3">
+            <a href="/login" class="nav-link {{$head != 'login' ? 'active' : 'disabled'}}"><i class="bi bi-arrow-bar-right"></i>Login</a>
+          </div>
+        @endauth
 
       </div>
     </div>

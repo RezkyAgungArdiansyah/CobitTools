@@ -1,5 +1,5 @@
 <div class="container px-5">
-    <h3>Step 3 : Refine the scope of the governance system.</h3>
+    <h4>Step 3 : Refine the scope of the governance system.</h4>
     <ol>
         @php
         if($slug =='DF5') echo "<li><b>Consider the threat landscape</li></b>"; else echo "<li>Consider the threat landscape</li>";

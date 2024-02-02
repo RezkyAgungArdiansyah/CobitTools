@@ -43,5 +43,5 @@
 </div>
 
 <div style='width:80%' class='container mt-4'>
-    <form action='/DF/DF1' method='post'>
+    <form action='' method='post'>
     @csrf

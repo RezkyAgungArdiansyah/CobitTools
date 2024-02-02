@@ -10,5 +10,5 @@ class df5_map extends Model
     use HasFactory;
     protected $table = "df5_map";
     protected $guarded = ["id"];
-    
+    public $timestamps = false;
 }

@@ -3,7 +3,7 @@ function chart($percents){
     //this function need input a number i.e $percents then it will return a horizontal bar
     //this function is needs as sub function for show_relative_imp_table
     if ($percents < 0) {
-        echo "<div style='width:34px;' class='col-sm-1 text-end border me-1'>$percents</div>";
+        echo "<div style='width:34px;' class='col-sm-1 text-end'>$percents</div>";
         for($i=1;$i<=20-abs($percents/5);$i++){
             echo "<div class='col'></div>";}
         for($i=20-abs($percents/5);$i<=20;$i++){
@@ -15,7 +15,7 @@ function chart($percents){
         }
     elseif ($percents > 0) {
         
-        echo "<div style='width:34px;' class='col-sm-1 text-end border'>". $percents ."</div>";
+        echo "<div style='width:34px;' class='col-sm-1 text-end'>". $percents ."</div>";
         for($i=1;$i<=22;$i++){
             echo "<div class='col'></div>";}
         for($i=20;$i<=20+$percents/5;$i++){
@@ -24,7 +24,7 @@ function chart($percents){
             echo "<div class='col'></div>";}
     }
     else {
-        echo "<div style='width:34px' class='col-sm-1 text-end border'>". $percents ."</div>";
+        echo "<div style='width:34px' class='col-sm-1 text-end'>". $percents ."</div>";
         echo  "<div class='col'></div>";
     }
 }
@@ -107,14 +107,23 @@ $l = count($Headers);
             echo "<td style='text-align:left' class='gmo'>".$row->{$DBColumns[0]}."</td>";
             $j = 0;
             foreach(array_slice($DBColumns,1) as $column){
-                echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='0' max='100'></td>";
+                if(in_array($n,[1,2,7])){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='5' required></td>";}
+                elseif($n == 4){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='3' required></td>";}
+                elseif(in_array($n,[5,6,8,9,10])){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='0' max='100' required></td>";}
+                else{
+                    if(in_array($column,['impact','likelihood'])){ echo "<td class='gmo'><input id='$i $j' name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' onchange=\"document.getElementById('rr_$i').value = document.getElementById('$i 0').value * document.getElementById('$i 1').value;\"  min='1' max='5' required></td>";}
+                    elseif($column == 'risk_rating'){echo "<td class='gmo'><input id='rr_$i' name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='25' required readonly></td>";}
+                    else{echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='25' required></td>";}
+                }
                 $j++;
             }
         echo "</tr>";
         $i++;
         }
+    echo "<tr class='gmo'>";
+    echo "<td colspan='".count($Headers)."' class='gmo'><button type='submit' class='container btn btn-secondary'>Submit</button></td>";
+    echo "</tr>";
     echo "</table>";
-    echo "<button type='submit' class='btn btn-secondary'>Submit</button>";
     echo "</form>";
 echo "</div>";
 }
@@ -190,19 +199,20 @@ function transposeMatrix($matrix) {
     return $transposedMatrix;
 }
 
-function calculate_relative_importance($Data,$DFMap,$MST,$GMO,$use_cor = false, $slug = ''){
+function calculate_relative_importance($Data,$DFMap,$MST,$GMO,bool $use_cor = false, $slug = ''){
 // this function will give output an one dimension with length 40, 
 // this function is neccesary for input on below function i.e show_ relative importance
 // $Data is input as on excel
 // $DFMap 
     if($slug != 'DF2'){
         //give 2 x 40 outputs matrices
-        $Data_ = to_array($Data,['importance','baseline']);
+        if($slug != 'DF3'){$Data_ = to_array($Data,['importance','baseline']);}
+        else{$Data_ = to_array($Data,['risk_rating','baseline']);}
         // reshape database column from 1 x n*40 to n x 40 matrices
         $DFMap_ = to_array_reshape($DFMap,40);
         // the outputs is only normal multiply the given matrices then the first column is for importance and the second is for the baseline importance
         $Outputs = multiplyMatrices($DFMap_,$Data_);}
-    else{
+    else{  // for DF2 only
         $Data_ = to_array($Data,['importance','baseline']); // I = 13 x 2
         $Data_ = transposeMatrix($Data_); // I = 2 x 13
         $DFMap_1 = to_array_reshape($DFMap[0],13); // M1 = 13 x 13
@@ -212,7 +222,8 @@ function calculate_relative_importance($Data,$DFMap,$MST,$GMO,$use_cor = false, 
         $Outputs = transposeMatrix($Outputs);
     }
     if($use_cor){
-        $avg_imp = $Data->avg('importance');
+        if($slug != 'DF3'){$avg_imp = $Data->avg('importance');}
+        else{$avg_imp = $Data->avg('risk_rating');}
         $avg_baseline = $Data->avg('baseline');
         $cor_factor = $avg_baseline/$avg_imp;
         $relative_imp = [];
@@ -234,15 +245,16 @@ function show_relative_imp_table($GMO,$relative_imp){
 // this function will give outputs horizontal bar chart that we can click it for each row, if neccesary more information
 // $GMO base on Database which have column id as primary key,id_gmo, dimension, and explanation
 // $relative_imp is only one dimension array with length 40
-    echo "<div style='width:80%' class='container my-5' id='main_table'>";
+    echo "<div style='width:80%;' class='container my-5' id='main_table'>";
     $i = 0;
     foreach($GMO as $gmo){
-        echo "<div type='button' class='d-flex flex-row my-1' data-bs-toggle='collapse' data-bs-target='#demo_$i'>";
+        // echo "<div style='cursor:pointer;transition:background-color 0.3s;' type='button' class='d-flex flex-row my-1' data-bs-toggle='collapse' data-bs-target='#demo_$i' onmouseover=\"this.style.backgroundColor='#a0a0a0'\" onmouseout=\"this.style.backgroundColor='#ffffff00'\">";
+        echo "<div type='button' class='d-flex flex-row my-1' data-bs-toggle='collapse' data-bs-target='#row_$i'>";
         echo "<div class='col-sm-1 pe-2'>>".$gmo->id_gmo."</div>";
         echo "<div class='col-sm-5'>".$gmo->dimension."</div>";
         chart($relative_imp[$i]);
         echo "</div>";
-        echo "<div id='demo_$i' class='collapse'><p>".$gmo->explanation."</p></div>";
+        echo "<div id='row_$i' class='collapse'><p>".$gmo->explanation."</p></div>";
     $i++;
     }
     echo "</div>";

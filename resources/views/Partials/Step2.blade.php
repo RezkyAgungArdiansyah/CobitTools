@@ -1,5 +1,5 @@
 <div class="container px-5">
-<h3>Step 2 : Determine the initial scope of the governance system</h3>
+<h4>Step 2 : Determine the initial scope of the governance system</h4>
 <ol>
     @php
     if($slug == 'DF1') echo "<li><b>Consider enterprise strategy.</b></li>";else echo "<li>Consider enterprise strategy.</li>";
