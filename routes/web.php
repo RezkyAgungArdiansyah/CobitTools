@@ -24,7 +24,6 @@ use App\Http\Controllers\RegistrationController;
 
 Route::get('/',[HomeController::class,'index'])->middleware('auth');
 
-
 Route::get('/GMO',[GMOController::class,'ShowGMO'])->middleware('auth');;
 
 Route::get('/DFMap/{slug}',[DFMapController::class, 'DFMap_slug'])->name('DFMap')->middleware('auth');;
@@ -49,5 +48,6 @@ Route::get('/DF',[DFController::class,'index'])-> middleware('auth');
 
 Route::get('/DF/{slug}',[DFController::class,'DF_slug'])->name('DF')->middleware('auth');
 
-Route::post('/DF/{slug}',[DFController::class,'DF_slug_submit'])->name('DF')->middleware('auth');
+Route::post('/DF/{slug}',[DFController::class,'DF_slug_submit'])->middleware('auth');
 
+Route::get('/DF/{slug}/{version}',[DFController::class,'DF_slug'])->Name('DFX')->middleware('auth');

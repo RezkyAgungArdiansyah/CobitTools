@@ -5,9 +5,17 @@
         <h3> Input Section - Importance of Each {{$DFName}}</h3>
     </div>
     @include('Partials.Offcanvas2')
-    
+    <div style='width:80%' class='container mt-4'>
+        @if(session()->has('Sum_Error_not_100%'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{session('Sum_Error_not_100%')}}
+          <button style="float: right;" type="button" class="btn-close-bs-dismiss" data-bs-dismiss="alert" aria-label="Close">x</button>
+        </div>
+        @endif
+        <form action="/DF/{{$slug}}" method='post'>
+        @csrf
     @php
-    showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],6);
+    showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],6,$max);
     $relative_imp = calculate_relative_importance($Data,$DFMap,$MST,$GMO);
     // print_r($relative_imp);
     @endphp

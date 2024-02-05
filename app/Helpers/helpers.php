@@ -93,7 +93,7 @@ function showTableMap($DF_Map,$Header_Name,$ID_Name,$i, $Arr){
     echo "</table>";
 }
 
-function showDFtable($MST,$Data,$Headers,$DBColumns,$n){
+function showDFtable($MST,$Data,$Headers,$DBColumns,$n,$max){
 $l = count($Headers);
     echo "<table class='gmo'>";
         echo "<tr class='gmo'>";
@@ -107,9 +107,13 @@ $l = count($Headers);
             echo "<td style='text-align:left' class='gmo'>".$row->{$DBColumns[0]}."</td>";
             $j = 0;
             foreach(array_slice($DBColumns,1) as $column){
-                if(in_array($n,[1,2,7])){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='5' required></td>";}
+                if(in_array($n,[1,2,7])){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='5' required "; 
+                    if($column == 'baseline'){echo "readonly";}
+                    echo "></td>";}
                 elseif($n == 4){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='3' required></td>";}
-                elseif(in_array($n,[5,6,8,9,10])){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='0' max='100' required></td>";}
+                elseif(in_array($n,[5,6,8,9,10])){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='0' max='100' required";
+                    if($column == 'baseline'){echo " readonly";}
+                    echo "></td>";}
                 else{
                     if(in_array($column,['impact','likelihood'])){ echo "<td class='gmo'><input id='$i $j' name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' onchange=\"document.getElementById('rr_$i').value = document.getElementById('$i 0').value * document.getElementById('$i 1').value;\"  min='1' max='5' required></td>";}
                     elseif($column == 'risk_rating'){echo "<td class='gmo'><input id='rr_$i' name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='25' required readonly></td>";}
@@ -121,7 +125,14 @@ $l = count($Headers);
         $i++;
         }
     echo "<tr class='gmo'>";
-    echo "<td colspan='".count($Headers)."' class='gmo'><button type='submit' class='container btn btn-secondary'>Submit</button></td>";
+    echo "<td style='text-align:center' class='gmo'>
+    <div class='btn-group container-fluid px-0'>
+        <button type='button' class='btn btn-secondary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Choose Version</button>";
+    echo "<div class='dropdown-menu dropdown-menu-right'>";
+    foreach( range(1,$max) as $i){
+    echo "<a class='dropdown-item' href='". route('DFX',['slug'=> 'DF'.$n, 'version' => 'Version_'.$i])."'>V$i</a>";}
+    echo "</div> </td>";
+    echo "<td colspan='".(count($Headers)-1)."' class='gmo'><button type='submit' class='container btn btn-secondary'>Submit</button></td>";
     echo "</tr>";
     echo "</table>";
     echo "</form>";
@@ -227,6 +238,7 @@ function calculate_relative_importance($Data,$DFMap,$MST,$GMO,bool $use_cor = fa
         $avg_baseline = $Data->avg('baseline');
         $cor_factor = $avg_baseline/$avg_imp;
         $relative_imp = [];
+        // dd($Outputs);
         foreach($Outputs as $output){
             $relative_imp[] = round(($cor_factor*($output[0]/$output[1])*100-100)/5)*5;
         }
@@ -248,8 +260,8 @@ function show_relative_imp_table($GMO,$relative_imp){
     echo "<div style='width:80%;' class='container my-5' id='main_table'>";
     $i = 0;
     foreach($GMO as $gmo){
-        // echo "<div style='cursor:pointer;transition:background-color 0.3s;' type='button' class='d-flex flex-row my-1' data-bs-toggle='collapse' data-bs-target='#demo_$i' onmouseover=\"this.style.backgroundColor='#a0a0a0'\" onmouseout=\"this.style.backgroundColor='#ffffff00'\">";
-        echo "<div type='button' class='d-flex flex-row my-1' data-bs-toggle='collapse' data-bs-target='#row_$i'>";
+        echo "<div style='cursor:pointer;transition:background-color 0.3s;' type='button' class='d-flex flex-row my-1' data-bs-toggle='collapse' data-bs-target='#row_$i' onmouseover=\"this.style.backgroundColor='#a0a0a0'\" onmouseout=\"this.style.backgroundColor='#ffffff00'\">";
+        // echo "<div type='button' class='d-flex flex-row my-1' data-bs-toggle='collapse' data-bs-target='#row_$i'>";
         echo "<div class='col-sm-1 pe-2'>>".$gmo->id_gmo."</div>";
         echo "<div class='col-sm-5'>".$gmo->dimension."</div>";
         chart($relative_imp[$i]);

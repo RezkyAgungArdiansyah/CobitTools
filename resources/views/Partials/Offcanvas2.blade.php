@@ -37,11 +37,7 @@
 </div>
 
 <div class="container-fluid mt-3">
-<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#demo">
-    Open Sidebar
-</button>
+    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#demo">
+        Open Sidebar
+    </button>
 </div>
-
-<div style='width:80%' class='container mt-4'>
-    <form action='' method='post'>
-    @csrf

@@ -5,9 +5,11 @@
         <h3> Input Section - Importance of Each {{$DFName}}</h3>
     </div>
     @include('Partials.Offcanvas2')
-    
+    <div style='width:80%' class='container mt-4'>
+        <form action="/DF/{{$slug}}" method='post'>
+        @csrf
     @php
-    showDFtable($MST,$Data,['Value','Impact','Likelihood','Risk Rating','Baseline'],['dimension','impact','likelihood','risk_rating','baseline'],3);
+    showDFtable($MST,$Data,['Value','Impact','Likelihood','Risk Rating','Baseline'],['dimension','impact','likelihood','risk_rating','baseline'],3,$max);
     $relative_imp = calculate_relative_importance($Data,$DFMap,$MST,$GMO,true,slug:'DF3');
     @endphp
     <div class="container-fluid border bg-secondary text-center mt-5">

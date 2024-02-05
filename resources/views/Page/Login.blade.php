@@ -10,7 +10,6 @@
           <button style="float: right;" type="button" class="btn-close-bs-dismiss" data-bs-dismiss="alert" aria-label="Close">x</button>
         </div>
       @endif
-
       @if(session()->has('loginError'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
           {{session('loginError')}}

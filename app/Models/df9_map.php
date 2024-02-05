@@ -10,5 +10,5 @@ class df9_map extends Model
     use HasFactory;
     protected $table = "df9_map";
     protected $guarded = ["id"];
-    
+
 }
