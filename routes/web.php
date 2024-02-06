@@ -46,6 +46,10 @@ Route::fallback(function () {
 
 Route::get('/DF',[DFController::class,'index'])-> middleware('auth');
 
+Route::get('DF/step_2_summary',[DFController::class,'DF_Summary1'])->Name('Summary1');
+
+Route::get('DF/step_3_summary',[DFController::class,'DF_Summary2'])->Name('Summary2');
+
 Route::get('/DF/{slug}',[DFController::class,'DF_slug'])->name('DF')->middleware('auth');
 
 Route::post('/DF/{slug}',[DFController::class,'DF_slug_submit'])->middleware('auth');

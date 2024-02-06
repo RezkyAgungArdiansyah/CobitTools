@@ -3,7 +3,7 @@ function chart($percents){
     //this function need input a number i.e $percents then it will return a horizontal bar
     //this function is needs as sub function for show_relative_imp_table
     if ($percents < 0) {
-        echo "<div style='width:34px;' class='col-sm-1 text-end'>$percents</div>";
+        echo "<div style='width:34px;' class='col-sm-1 text-end border'>$percents</div>";
         for($i=1;$i<=20-abs($percents/5);$i++){
             echo "<div class='col'></div>";}
         for($i=20-abs($percents/5);$i<=20;$i++){
@@ -15,7 +15,7 @@ function chart($percents){
         }
     elseif ($percents > 0) {
         
-        echo "<div style='width:34px;' class='col-sm-1 text-end'>". $percents ."</div>";
+        echo "<div style='width:34px;' class='col-sm-1 text-end border'>". $percents ."</div>";
         for($i=1;$i<=22;$i++){
             echo "<div class='col'></div>";}
         for($i=20;$i<=20+$percents/5;$i++){
@@ -24,7 +24,7 @@ function chart($percents){
             echo "<div class='col'></div>";}
     }
     else {
-        echo "<div style='width:34px' class='col-sm-1 text-end'>". $percents ."</div>";
+        echo "<div style='width:34px' class='col-sm-1 text-end border'>". $percents ."</div>";
         echo  "<div class='col'></div>";
     }
 }
@@ -257,7 +257,7 @@ function show_relative_imp_table($GMO,$relative_imp){
 // this function will give outputs horizontal bar chart that we can click it for each row, if neccesary more information
 // $GMO base on Database which have column id as primary key,id_gmo, dimension, and explanation
 // $relative_imp is only one dimension array with length 40
-    echo "<div style='width:80%;' class='container my-5' id='main_table'>";
+    echo "<div style='width:80%;' class='container my-5 border' id='main_table'>";
     $i = 0;
     foreach($GMO as $gmo){
         echo "<div style='cursor:pointer;transition:background-color 0.3s;' type='button' class='d-flex flex-row my-1' data-bs-toggle='collapse' data-bs-target='#row_$i' onmouseover=\"this.style.backgroundColor='#a0a0a0'\" onmouseout=\"this.style.backgroundColor='#ffffff00'\">";
