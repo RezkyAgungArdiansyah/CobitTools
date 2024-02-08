@@ -27,7 +27,9 @@ Route::get('/',[HomeController::class,'index'])->middleware('auth');
 Route::get('/GMO',[GMOController::class,'ShowGMO'])->middleware('auth');;
 
 Route::get('/DFMap/{slug}',[DFMapController::class, 'DFMap_slug'])->name('DFMap')->middleware('auth');;
- 
+
+Route::post('/DFMap/{slug}',[DFMapController::class, 'DFMap_slug'])->name('DFMap')->middleware('auth');;
+
 Route::get('/DFMap',[DFMapController::class,'DFMap'])->middleware('auth');;
 
 Route::get('/login',[LoginController::class,'index'])->middleware('guest');;
@@ -48,7 +50,11 @@ Route::get('/DF',[DFController::class,'index'])-> middleware('auth');
 
 Route::get('DF/step_2_summary',[DFController::class,'DF_Summary1'])->Name('Summary1');
 
+Route::post('DF/step_2_summary',[DFController::class,'DF_Summary1'])->Name('Summary1');
+
 Route::get('DF/step_3_summary',[DFController::class,'DF_Summary2'])->Name('Summary2');
+
+Route::post('DF/step_3_summary',[DFController::class,'DF_Summary2'])->Name('Summary2');
 
 Route::get('/DF/{slug}',[DFController::class,'DF_slug'])->name('DF')->middleware('auth');
 

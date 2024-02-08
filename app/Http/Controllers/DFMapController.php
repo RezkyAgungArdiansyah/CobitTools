@@ -38,7 +38,7 @@ class DFMapController extends Controller
         return view('Page/DFMap', ["judul"=> "Design Factor","head"=>"DFMap", "slug"=>'']);
     }
     
-    public function DFMap_slug($slug){
+    public function DFMap_slug($slug, Request $request){
         switch ($slug) {
             case "DF1":
                 $MST = mst_df1::all();

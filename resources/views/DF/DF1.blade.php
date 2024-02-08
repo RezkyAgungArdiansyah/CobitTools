@@ -6,7 +6,7 @@
     </div>
     @include('Partials.Offcanvas2')
     <div style='width:80%' class='container mt-4'>
-        <form action="/DF/{{$slug}}" method='post'>
+        <form id="myForm" action="/DF/{{$slug}}" method='post'>
         @csrf
     @php
     showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],1,$max);
@@ -15,11 +15,6 @@
     <div class="container-fluid border bg-secondary text-center mt-5">
         <h3>Design Factor 1 {{$DFName}} Resulting Governance/Management Objetives Importance</h3>
     </div>
-    <script>
-        function updateDiv(){
-            document.getElementById('main_table').innerHTML = "";
-        }
-     </script>
     @php
     show_relative_imp_table($GMO,$relative_imp)
     @endphp

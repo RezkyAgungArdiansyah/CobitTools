@@ -39,6 +39,7 @@ use App\Models\df8_imp;
 use App\Models\df9_imp;
 use App\Models\df10_imp;
 
+use App\Models\weight;
 use App\Models\GMO;
 
 class DFController extends Controller{
@@ -249,7 +250,12 @@ public function DF_slug_submit($slug, Request $request){
         return view("DF/$slug",["judul"=> "Design Factor","head"=>"Design Factor","DFName"=>$DFName,"MST"=>$MST,"Data"=>$Data,"DFMap"=>$DFMap,"GMO"=>$GMO,"slug"=>$slug,"max" => $maxVersion+1]);   
     }
 
-public function DF_Summary1(){
+public function DF_Summary1(Request $request){
+    if($request->method() == 'POST'){
+    $form_data = $request->input('input');
+    for($i=0;$i<4;$i++){weight::where('id',$i+1)->update(['step_2_weight'=> $form_data[$i]]);}
+    }
+    
     $GMO = GMO::all();
     $maxVersion = [df1_imp::max('versions'),df2_imp::max('versions'),df3_imp::max('versions'),df4_imp::max('versions')];
     $Data = [df1_imp::where('versions',$maxVersion[0])->get(),df2_imp::where('versions',$maxVersion[1])->get(),df3_imp::where('versions',$maxVersion[2])->get(),df4_imp::where('versions',$maxVersion[3])->get()];
@@ -257,53 +263,61 @@ public function DF_Summary1(){
     $DFName = ['Enterprise & Strategy','Enterprise Goals','Risk Profile','IT Related Issues'];
     $DFMap = [df1_map::all(),[df2_map1::all(),df2_map2::all()],df3_map::all(),df4_map::all()];
     $relative_imp = [calculate_relative_importance($Data[0],$DFMap[0],$MST[0],$GMO,true),calculate_relative_importance($Data[1],$DFMap[1],$MST[1],$GMO,true,'DF2'),calculate_relative_importance($Data[2],$DFMap[2],$MST[2],$GMO,true,slug:'DF3'),calculate_relative_importance($Data[3],$DFMap[3],$MST[3],$GMO,true)];
-    $weight = [[1],[1],[1],[1]];
+    
+    $weight_ = weight::orderBy('id')->get();
+    $weight = [[$weight_[0]->step_2_weight],[$weight_[1]->step_2_weight],[$weight_[2]->step_2_weight],[$weight_[3]->step_2_weight]];
+    // $weight = [[1],[1],[1],[1]];
     $relative_imp = transposeMatrix($relative_imp);
     $tmp_data = multiplyMatrices($relative_imp,$weight);
     $max  = max(abs(max($tmp_data)[0]),abs(min($tmp_data)[0]));
     $FinalData = [];
     foreach($tmp_data as $row){
-        $FinalData[] = round((100*$row[0]/$max)/5)*5;
+        $FinalData[] = round(floor(100*$row[0]/$max)/5)*5;
     }
-    return view("DF/step_2_summary",["judul"=> "Design Factor","head"=>"Design Factor","GMO"=>$GMO,"all_relative_imp"=>$relative_imp,"FinalData"=>$FinalData,"DFName"=>$DFName]);
+    return view("DF/step_2_summary",["judul"=> "Design Factor","head"=>"Design Factor","GMO"=>$GMO,"all_relative_imp"=>$relative_imp,"FinalData"=>$FinalData,"DFName"=>$DFName,"weight"=>$weight]);
 }
 
-// public function DF_Summary2(){
-//     $GMO = GMO::all();
+public function DF_Summary2(Request $request){
+    if($request->method() == 'POST'){
+        $form_data = $request->input('input');
+        for($i=0;$i<6;$i++){weight::where('id',$i+1)->update(['step_3_weight'=> $form_data[$i]]);}
+        }
+    $GMO = GMO::all();
     
-//     $maxVersion_ = [df1_imp::max('versions'),df2_imp::max('versions'),df3_imp::max('versions'),df4_imp::max('versions')];
-//     $Data_ = [df1_imp::where('versions',$maxVersion_[0])->get(),df2_imp::where('versions',$maxVersion_[1])->get(),df3_imp::where('versions',$maxVersion_[2])->get(),df4_imp::where('versions',$maxVersion_[3])->get()];
-//     $MST_ = [mst_df1::all(),mst_df2_eg::all(),mst_df3::all(),mst_df4::all()];
-//     $DFMap_ = [df1_map::all(),[df2_map1::all(),df2_map2::all()],df3_map::all(),df4_map::all()];
-//     $relative_imp_ = [calculate_relative_importance($Data_[0],$DFMap_[0],$MST_[0],$GMO,true),calculate_relative_importance($Data_[1],$DFMap_[1],$MST_[1],$GMO,true,'DF2'),calculate_relative_importance($Data_[2],$DFMap_[2],$MST_[2],$GMO,true,slug:'DF3'),calculate_relative_importance($Data_[3],$DFMap_[3],$MST_[3],$GMO,true)];
-//     $weight_ = [[1],[1],[1],[1]];
-//     $relative_imp_ = transposeMatrix($relative_imp_);
-//     $tmp_data_ = multiplyMatrices($relative_imp_,$weight_);
+    $maxVersion_ = [df1_imp::max('versions'),df2_imp::max('versions'),df3_imp::max('versions'),df4_imp::max('versions')];
+    $Data_ = [df1_imp::where('versions',$maxVersion_[0])->get(),df2_imp::where('versions',$maxVersion_[1])->get(),df3_imp::where('versions',$maxVersion_[2])->get(),df4_imp::where('versions',$maxVersion_[3])->get()];
+    $MST_ = [mst_df1::all(),mst_df2_eg::all(),mst_df3::all(),mst_df4::all()];
+    $DFMap_ = [df1_map::all(),[df2_map1::all(),df2_map2::all()],df3_map::all(),df4_map::all()];
+    $relative_imp_ = [calculate_relative_importance($Data_[0],$DFMap_[0],$MST_[0],$GMO,true),calculate_relative_importance($Data_[1],$DFMap_[1],$MST_[1],$GMO,true,'DF2'),calculate_relative_importance($Data_[2],$DFMap_[2],$MST_[2],$GMO,true,slug:'DF3'),calculate_relative_importance($Data_[3],$DFMap_[3],$MST_[3],$GMO,true)];
+    $weight_ = weight::orderBy('id')->get();
+    $weight_ = [[$weight_[0]->step_2_weight],[$weight_[1]->step_2_weight],[$weight_[2]->step_2_weight],[$weight_[3]->step_2_weight]];
+    $relative_imp_ = transposeMatrix($relative_imp_);
+    $tmp_data_ = multiplyMatrices($relative_imp_,$weight_);
     
-//     $maxVersion = [df5_imp::max('versions'),df6_imp::max('versions'),df7_imp::max('versions'),df8_imp::max('versions'),df9_imp::max('versions'),df10_imp::max('versions')];
-//     $Data = [df5_imp::where('versions',$maxVersion[0])->get(),df6_imp::where('versions',$maxVersion[1])->get(),df7_imp::where('versions',$maxVersion[2])->get(),df8_imp::where('versions',$maxVersion[3])->get(),df9_imp::where('versions',$maxVersion[4])->get(),df10_imp::where('versions',$maxVersion[5])->get()];
-//     $MST = [mst_df5::all(),mst_df6::all(),mst_df7::all(),mst_df8::all(),mst_df9::all(),mst_df10::all()];
-//     $DFName = ['Threat Landscape','Compliance Req\'s','Role of IT','Sourcing Model for IT','IT Implementation Methods','Technology Adoption Strategy'];
-//     $DFMap = [df5_map::all(),df6_map::all(),df7_map::all(),df8_map::all(),df9_map::all(),df10_map::all()];
-//     $relative_imp = [calculate_relative_importance($Data[0],$DFMap[0],$MST[0],$GMO),calculate_relative_importance($Data[1],$DFMap[1],$MST[1],$GMO),calculate_relative_importance($Data[2],$DFMap[2],$MST[2],$GMO,true),calculate_relative_importance($Data[3],$DFMap[3],$MST[3],$GMO),calculate_relative_importance($Data[4],$DFMap[4],$MST[4],$GMO),calculate_relative_importance($Data[5],$DFMap[5],$MST[5],$GMO)];
-//     $weight = [[1],[1],[1],[1],[1],[1]];
-//     $relative_imp = transposeMatrix($relative_imp);
-//     $tmp_data = multiplyMatrices($relative_imp,$weight);
+    $maxVersion = [df5_imp::max('versions'),df6_imp::max('versions'),df7_imp::max('versions'),df8_imp::max('versions'),df9_imp::max('versions'),df10_imp::max('versions')];
+    $Data = [df5_imp::where('versions',$maxVersion[0])->get(),df6_imp::where('versions',$maxVersion[1])->get(),df7_imp::where('versions',$maxVersion[2])->get(),df8_imp::where('versions',$maxVersion[3])->get(),df9_imp::where('versions',$maxVersion[4])->get(),df10_imp::where('versions',$maxVersion[5])->get()];
+    $MST = [mst_df5::all(),mst_df6::all(),mst_df7::all(),mst_df8::all(),mst_df9::all(),mst_df10::all()];
+    $DFName = ['Threat Landscape','Compliance Req\'s','Role of IT','Sourcing Model for IT','IT Implementation Methods','Technology Adoption Strategy'];
+    $DFMap = [df5_map::all(),df6_map::all(),df7_map::all(),df8_map::all(),df9_map::all(),df10_map::all()];
+    $relative_imp = [calculate_relative_importance($Data[0],$DFMap[0],$MST[0],$GMO),calculate_relative_importance($Data[1],$DFMap[1],$MST[1],$GMO),calculate_relative_importance($Data[2],$DFMap[2],$MST[2],$GMO,true),calculate_relative_importance($Data[3],$DFMap[3],$MST[3],$GMO),calculate_relative_importance($Data[4],$DFMap[4],$MST[4],$GMO),calculate_relative_importance($Data[5],$DFMap[5],$MST[5],$GMO)];
+    $weight = weight::orderBy('id')->get();
+    $weight = [[$weight[0]->step_3_weight],[$weight[1]->step_3_weight],[$weight[2]->step_3_weight],[$weight[3]->step_3_weight],[$weight[4]->step_3_weight],[$weight[5]->step_3_weight]];
+    $relative_imp = transposeMatrix($relative_imp);
+    $tmp_data = multiplyMatrices($relative_imp,$weight);
     
-//     $temp_data = [];
-//     $i = 0;
-//     foreach($tmp_data as $row){
-//         $temp_data[] = [$tmp_data_[$i][0]+$tmp_data[$i][0]];
-//         $i++;
-//     }
-//     // dd($temp_data);
+    $temp_data = [];
+    $i = 0;
+    foreach($tmp_data as $row){
+        $temp_data[] = [$tmp_data_[$i][0]+$tmp_data[$i][0]];
+        $i++;
+    }
+    // dd($temp_data);
 
-//     $max  = max(abs(max($temp_data)[0]),abs(min($temp_data)[0]));
-//     dd($max);
-//     $FinalData = [];
-//     foreach($temp_data as $row){
-//         $FinalData[] = round((100*$row[0]/$max)/5)*5;
-//     }
-//     return view("DF/step_3_summary",["judul"=> "Design Factor","head"=>"Design Factor","GMO"=>$GMO,"all_relative_imp"=>$relative_imp,"FinalData"=>$FinalData,"DFName"=>$DFName]);
-// }
+    $max  = max(abs(max($temp_data)[0]),abs(min($temp_data)[0]));
+    $FinalData = [];
+    foreach($temp_data as $row){
+        $FinalData[] = round(floor(100*$row[0]/$max)/5)*5;
+    }
+    return view("DF/step_3_summary",["judul"=> "Design Factor","head"=>"Design Factor","GMO"=>$GMO,"all_relative_imp"=>$relative_imp,"FinalData"=>$FinalData,"DFName"=>$DFName,"weight"=>$weight]);
+}
 } // close bracket of class

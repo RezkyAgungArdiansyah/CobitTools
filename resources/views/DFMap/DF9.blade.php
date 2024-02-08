@@ -8,7 +8,7 @@
 <div class="container p-5"><b><u>IT implementation method</u></b> - The methods the enterprise adopts can be classified as noted on below table</div>
 
 @php
-    showTable($MST,['IT Implementation Method','Explanation'],['dimension','explanation']);
+    showTable($MST,['IT Implementation Method','Explanation'],['dimension','explanation'],9);
 @endphp
 
 <h1 class="gmo">Design Factor 9 Map Tables</h1>

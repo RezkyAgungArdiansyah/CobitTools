@@ -6,7 +6,7 @@
     </div>
     @include('Partials.Offcanvas2')
     <div style='width:80%' class='container mt-4'>
-        <form action="/DF/{{$slug}}" method='post'>
+        <form id="myForm" action="/DF/{{$slug}}" method='post'>
         @csrf
     @php
     showDFtable($MST,$Data,['Value','Impact','Likelihood','Risk Rating','Baseline'],['dimension','impact','likelihood','risk_rating','baseline'],3,$max);

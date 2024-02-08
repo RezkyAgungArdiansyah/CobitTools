@@ -13,7 +13,7 @@
           <button style="float: right;" type="button" class="btn-close-bs-dismiss" data-bs-dismiss="alert" aria-label="Close">x</button>
         </div>
         @endif
-        <form action="/DF/{{$slug}}" method='post'>
+        <form id="myForm" action="/DF/{{$slug}}" method='post'>
         @csrf
     @php
     showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],5,$max);

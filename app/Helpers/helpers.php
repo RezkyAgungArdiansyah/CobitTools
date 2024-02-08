@@ -29,7 +29,7 @@ function chart($percents){
     }
 }
 
-function showTable($table,$shown_columns ,$columns) {
+function showTable($table,$shown_columns ,$columns,$n) {
     // this function is used to show first table on "Design Factor Map X" menu
     //this function only show table on Database on the chosen column
     
@@ -48,14 +48,26 @@ function showTable($table,$shown_columns ,$columns) {
     foreach($table as $row){
         echo "<tr class='gmo'>";
         echo "<td class='gmo'>$i</td>";
-        foreach($columns as $column){
-            echo "<td style='text-align:left;' class='gmo'>{$row->$column}</td>";
+        $j = 0;
+        if(!auth()->user()->role == 'superadmin'){
+            foreach($columns as $column){
+                echo "<td style='text-align:left;' class='gmo'>{$row->$column}</td>";            
+            $j++;
+        }}
+        else{
+            foreach($columns as $column){
+                $text = htmlspecialchars($row->$column);
+                if(($column == 'explanation' || $n==2) && $j>0 || in_array($n,[3,4])){echo "<td style='text-align:left;' class='gmo'> <input style='width:850px;' type='text' value='$text' required> </td>";}
+                else{echo "<td style='text-align:left;' class='gmo'> <input type='text' value='$text' required> </td>";}
+                $j++;
         }
+    }
         echo "</tr>";
         $i++;
     }
 
-    echo "</table>"; 
+    echo "</table>";
+    
     echo "</div>";
 }
 
@@ -85,7 +97,8 @@ function showTableMap($DF_Map,$Header_Name,$ID_Name,$i, $Arr){
         echo "<tr class='gmo'>";
         echo "<td class='gmo'>{$row->$y}</td>";
         for ($j=0; $j < count($Header_Name); $j++) { 
-            echo "<td class='gmo'>{$DF_Map[$i + $j*$rep]->relevance}</td>";
+            if(auth()->user()->role == 'superadmin'){echo "<td class='gmo'><input name='input2[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' step='0.5' value='".$DF_Map[$i + $j*$rep]->relevance."' min='0' max='4' required></td>";}
+            else{echo "<td class='gmo'>".$DF_Map[$i + $j*$rep]->relevance."</td>";}
         }
         echo "</tr>";
         $i++;
@@ -132,7 +145,7 @@ $l = count($Headers);
     foreach( range(1,$max) as $i){
     echo "<a class='dropdown-item' href='". route('DFX',['slug'=> 'DF'.$n, 'version' => 'Version_'.$i])."'>V$i</a>";}
     echo "</div> </td>";
-    echo "<td colspan='".(count($Headers)-1)."' class='gmo'><button type='submit' class='container btn btn-secondary'>Submit</button></td>";
+    echo "<td colspan='".(count($Headers)-1)."' class='gmo'><button type='button' onclick=\"confirmSubmit();\" class='container btn btn-secondary'>Submit</button></td>";
     echo "</tr>";
     echo "</table>";
     echo "</form>";
