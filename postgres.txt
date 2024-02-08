@@ -1,0 +1,3 @@
+pg_dump --dbname postgres --username postgres > postgres.sql
+
+password : Kyygung
