@@ -106,8 +106,14 @@ function showTableMap($DF_Map,$Header_Name,$ID_Name,$i, $Arr){
     echo "</table>";
 }
 
-function showDFtable($MST,$Data,$Headers,$DBColumns,$n,$max){
+function showDFtable($MST,$Data,$Headers,$DBColumns,$n,$max,$version_name){
 $l = count($Headers);
+// Define the regular expression pattern with variable interpolation
+$pattern = "/^(?!.*\\bDF$n\\b).*$/";
+// Example string to test
+$role = auth()->user()->role;
+// Check if the string does not contain "DF10"
+$bool = !preg_match($pattern, $role) || $role =='superadmin';
     echo "<table class='gmo'>";
         echo "<tr class='gmo'>";
         foreach($Headers as $Head){
@@ -121,16 +127,24 @@ $l = count($Headers);
             $j = 0;
             foreach(array_slice($DBColumns,1) as $column){
                 if(in_array($n,[1,2,7])){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='5' required "; 
-                    if($column == 'baseline'){echo "readonly";}
+                    if($column == 'baseline' || !$bool ) echo "readonly";
                     echo "></td>";}
                 elseif($n == 4){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='3' required></td>";}
                 elseif(in_array($n,[5,6,8,9,10])){echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='0' max='100' required";
-                    if($column == 'baseline'){echo " readonly";}
+                    if($column == 'baseline' || $bool ) echo " readonly";
                     echo "></td>";}
                 else{
-                    if(in_array($column,['impact','likelihood'])){ echo "<td class='gmo'><input id='$i $j' name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' onchange=\"document.getElementById('rr_$i').value = document.getElementById('$i 0').value * document.getElementById('$i 1').value;\"  min='1' max='5' required></td>";}
-                    elseif($column == 'risk_rating'){echo "<td class='gmo'><input id='rr_$i' name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='25' required readonly></td>";}
-                    else{echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='25' required></td>";}
+                    if(in_array($column,['impact','likelihood'])){ 
+                        echo "<td class='gmo'><input id='$i $j' name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' onchange=\"document.getElementById('rr_$i').value = document.getElementById('$i 0').value * document.getElementById('$i 1').value;\"  min='1' max='5' required";
+                        if(!$bool) echo "readonly";
+                        echo "></td>";}
+                    elseif($column == 'risk_rating'){
+                        echo "<td class='gmo'><input id='rr_$i' name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='25' required readonly";
+                        if(!$bool) echo "readonly";
+                        echo "></td>";}
+                    else{echo "<td class='gmo'><input name='input[$i][$j]' style='text-align:center;padding-left:15px;border:none;' type='number' value='".$Data->get($i)->$column."' min='1' max='25' required";
+                        if(!$bool) echo "readonly";
+                        echo "></td>";}
                 }
                 $j++;
             }
@@ -143,9 +157,11 @@ $l = count($Headers);
         <button type='button' class='btn btn-secondary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Choose Version</button>";
     echo "<div class='dropdown-menu dropdown-menu-right'>";
     foreach( range(1,$max) as $i){
-    echo "<a class='dropdown-item' href='". route('DFX',['slug'=> 'DF'.$n, 'version' => 'Version_'.$i])."'>V$i</a>";}
+    echo "<a class='dropdown-item' href='". route('DFX',['slug'=> 'DF'.$n, 'version' => 'Version_'.$i])."'>V$i - {$version_name[$i-1]->name} </a>";}
     echo "</div> </td>";
-    echo "<td colspan='".(count($Headers)-1)."' class='gmo'><button type='button' onclick=\"confirmSubmit();\" class='container btn btn-secondary'>Submit</button></td>";
+    if ($bool) {
+        echo "<td colspan='".(count($Headers)-1)."' class='gmo'><button type='button' onclick=\"confirmSubmit();\" class='container btn btn-secondary'>Submit</button></td>";
+    }
     echo "</tr>";
     echo "</table>";
     echo "</form>";
@@ -178,15 +194,16 @@ function to_array($Data,$columns){
     }
 
 function multiplyMatrices($matrix1, $matrix2) {
+    
     $result = [];
-
     $rows1 = count($matrix1);
     $cols1 = count($matrix1[0]);
     $rows2 = count($matrix2);
     $cols2 = count($matrix2[0]);
-
+   
     // Check if matrices can be multiplied
     if ($cols1 !== $rows2) {
+        // dd($matrix1,$matrix2);
         return "Matrices cannot be multiplied. Column count of the first matrix must match the row count of the second matrix.";
     }
 
@@ -283,6 +300,5 @@ function show_relative_imp_table($GMO,$relative_imp){
     $i++;
     }
     echo "</div>";
-
 }
 ?>

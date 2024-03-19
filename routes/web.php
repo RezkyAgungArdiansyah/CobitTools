@@ -24,20 +24,20 @@ use App\Http\Controllers\RegistrationController;
 
 Route::get('/',[HomeController::class,'index'])->middleware('auth');
 
+Route::get('/',[HomeController::class,'Summary'])->middleware('auth')->Name('Home');
+Route::post('/',[HomeController::class,'Summary'])->middleware('auth')->Name('Home');
+
 Route::get('/GMO',[GMOController::class,'ShowGMO'])->middleware('auth');;
 
 Route::get('/DFMap/{slug}',[DFMapController::class, 'DFMap_slug'])->name('DFMap')->middleware('auth');;
-
 Route::post('/DFMap/{slug}',[DFMapController::class, 'DFMap_slug'])->name('DFMap')->middleware('auth');;
 
 Route::get('/DFMap',[DFMapController::class,'DFMap'])->middleware('auth');;
 
 Route::get('/login',[LoginController::class,'index'])->middleware('guest');;
-
 Route::post('/login',[LoginController::class,'authenticate'])->name('login.index')->middleware('guest');;
 
 Route::get('/register',[RegistrationController::class,'index'])->middleware('guest');;
-
 Route::post('/register',[RegistrationController::class,'store'])->middleware('guest');;
 
 Route::post('logout',[LoginController::class,'logout'])->middleware('auth');
@@ -48,16 +48,13 @@ Route::fallback(function () {
 
 Route::get('/DF',[DFController::class,'index'])-> middleware('auth');
 
-Route::get('DF/step_2_summary',[DFController::class,'DF_Summary1'])->Name('Summary1');
+// Route::get('DF/step_2_summary',[DFController::class,'DF_Summary1'])->Name('Summary1');
+// Route::post('DF/step_2_summary',[DFController::class,'DF_Summary1'])->Name('Summary1');
 
-Route::post('DF/step_2_summary',[DFController::class,'DF_Summary1'])->Name('Summary1');
-
-Route::get('DF/step_3_summary',[DFController::class,'DF_Summary2'])->Name('Summary2');
-
-Route::post('DF/step_3_summary',[DFController::class,'DF_Summary2'])->Name('Summary2');
+// Route::get('DF/step_3_summary',[DFController::class,'DF_Summary2'])->Name('Summary2');
+// Route::post('DF/step_3_summary',[DFController::class,'DF_Summary2'])->Name('Summary2');
 
 Route::get('/DF/{slug}',[DFController::class,'DF_slug'])->name('DF')->middleware('auth');
-
 Route::post('/DF/{slug}',[DFController::class,'DF_slug_submit'])->middleware('auth');
 
 Route::get('/DF/{slug}/{version}',[DFController::class,'DF_slug'])->Name('DFX')->middleware('auth');

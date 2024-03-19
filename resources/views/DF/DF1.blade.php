@@ -9,7 +9,7 @@
         <form id="myForm" action="/DF/{{$slug}}" method='post'>
         @csrf
     @php
-    showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],1,$max);
+    showDFtable($MST,$Data,['Value','Importance','Baseline'],['dimension','importance','baseline'],1,$max,$version_name);
     $relative_imp = calculate_relative_importance($Data,$DFMap,$MST,$GMO,true);
     @endphp
     <div class="container-fluid border bg-secondary text-center mt-5">

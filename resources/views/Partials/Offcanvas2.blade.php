@@ -13,7 +13,7 @@
         <div class="btn-group">
             <button style="font-size:14px" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Determine the initial scope of the governance system.</button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="{{route('Summary1')}}">Step 2 Summary</a>
+              {{-- <a class="dropdown-item" href="{{route('Summary1')}}">Step 2 Summary</a> --}}
               <a class="dropdown-item" href="{{route('DF','DF1')}}">DF 1</a>
               <a class="dropdown-item" href="{{route('DF','DF2')}}">DF 2</a>
               <a class="dropdown-item" href="{{route('DF','DF3')}}">DF 3</a>
@@ -25,7 +25,7 @@
         <div class="btn-group">
             <button style="font-size:14px" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Determine the initial scope of the governance system.</button>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{route('Summary2')}}">Step 3 Summary</a>
+                {{-- <a class="dropdown-item" href="{{route('Summary2')}}">Step 3 Summary</a> --}}
                 <a class="dropdown-item" href="{{route('DF','DF5')}}">DF 5</a>
                 <a class="dropdown-item" href="{{route('DF','DF6')}}">DF 6</a>
                 <a class="dropdown-item" href="{{route('DF','DF7')}}">DF 7</a>

@@ -1,3 +1,9 @@
+backup
 pg_dump --dbname postgres --username postgres > postgres.sql
 
 password : Kyygung
+
+recover
+psql -U postgres -d postgres -f postgres.sql
+
+ALTER TABLE users ALTER COLUMN "role" TYPE varchar(100) USING "role"::varchar(100);
